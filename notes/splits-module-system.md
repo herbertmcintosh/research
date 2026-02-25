@@ -77,8 +77,13 @@ The Module System provides the authorization, but the agent still needs to sign 
 
 See [Agent Transaction Architecture](agent-transaction-architecture.md) for the full stack.
 
+## Gas
+
+Unlike transactions through the Splits Teams UI (which are gas-sponsored), `executeFromModule` calls require the Executor EOA to pay gas in ETH. The Executor address needs to hold ETH on the same chain as the subaccount. This means the agent needs two things funded:
+- The **subaccount** with tokens for operations (USDC, etc.)
+- The **Executor EOA** with ETH for gas
+
 ## Open questions
 
-- How does gas work? Is `executeFromModule` gas-sponsored like normal Splits transactions, or does the Executor pay?
 - What does the `enableModule` flow look like in the Teams UI?
 - Can modules be scoped to specific function selectors or target addresses today, or is that purely future work?

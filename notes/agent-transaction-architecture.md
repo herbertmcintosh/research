@@ -46,38 +46,28 @@ How should an AI agent's onchain transaction stack be structured? This note synt
 4. **Execute**: Sign and submit `executeFromModule(calls)` with the Executor key
 5. **Verify** (Herd MCP): Decode the executed transaction, confirm success, check updated state
 
-## Transaction submission options
+## Transaction submission: viem
 
-The [Splits Module System](splits-module-system.md) provides authorization. The agent still needs to sign and broadcast. Options ranked by simplicity:
+After evaluating the options, **viem** is the right choice for transaction submission:
 
-### 1. Foundry `cast` (simplest)
+- **Already available** in the agent's Node.js environment (no new dependencies)
+- **Full programmatic control**: gas estimation, nonce management, simulation before submission, receipt verification, error parsing
+- **Extensible**: encode arbitrary calldata, batch operations, integrate gas price monitoring
+- **Portable**: same script works anywhere Node.js runs
 
-```bash
-cast send $SUBACCOUNT \
-  "executeFromModule((address,uint256,bytes))" \
-  "($TARGET,$VALUE,$CALLDATA)" \
-  --private-key $EXECUTOR_KEY \
-  --rpc-url $RPC_URL
-```
+The alternatives considered:
+- **Foundry `cast`**: Requires installing ~500MB of tooling. Shell-based error handling is limited. Good for one-off debugging but not for production agent use.
+- **Herd HAL** (beta): Promising future option if it supports custom signing keys. Worth revisiting when available.
 
-Pros: Zero dependencies beyond Foundry. Agent constructs calldata, runs a shell command.
-Cons: Error handling is basic. Gas estimation is automatic but not configurable.
+### The script
 
-### 2. viem script (more control)
+The execution script exposes four commands:
+- `check` — verify module is enabled, show balances
+- `transfer <to> <token> <amount>` — transfer tokens from the subaccount (handles ERC-20 encoding)
+- `raw <target> <value> <calldata>` — execute arbitrary calldata through the module
+- `batch <json-file>` — execute multiple calls atomically
 
-A Node.js script using viem that:
-- Holds the Executor private key
-- Encodes `executeFromModule` calls
-- Estimates gas
-- Submits with retry logic
-- Returns transaction hash and status
-
-Pros: Full control over gas, nonce, retries, error handling.
-Cons: More code to maintain.
-
-### 3. Herd HAL (potential future)
-
-If Herd's HAL supports custom signing keys, it could handle both read and write — the agent describes the transaction in HAL's DSL and Herd handles signing, gas, and submission. Currently in beta.
+Every execution follows: simulate → submit → wait for receipt → return structured result (hash, status, gas used, block number).
 
 ## How this relates to x402
 
@@ -105,7 +95,7 @@ x402 is better for micropayments to x402-enabled APIs. Module execution is bette
 
 ## Open questions
 
-- **Gas sponsorship**: Does `executeFromModule` get gas sponsored like normal Splits UI transactions? If not, the Executor EOA needs ETH for gas.
+- **Gas**: `executeFromModule` is NOT gas-sponsored. The Executor EOA must hold ETH for gas on the target chain. Budget for both: tokens in the subaccount for operations, ETH in the Executor for gas.
 - **Batching**: Can `executeFromModule(Call[])` batch arbitrary multi-step operations (e.g., approve + swap + transfer) atomically?
 - **OpenClaw + Herd MCP**: Herd is built for Claude Code's MCP. How to integrate with OpenClaw? Options: MCP bridge, direct API if available, or just use RPC calls for read operations.
 - **Monitoring**: Should the agent proactively monitor the subaccount (heartbeat check for unexpected balance changes, failed transactions)?
