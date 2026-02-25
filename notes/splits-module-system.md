@@ -27,11 +27,13 @@ The `Call` struct is `(address target, uint256 value, bytes data)` — standard 
 
 ### Setup flow (verified, working)
 
-1. Generate an Executor key — a new EOA private key held by the agent
+The agent can do this entire setup itself — no human hands required beyond granting the agent access to the Teams account:
+
+1. Generate an Executor key — a new EOA private key held by the agent (or reuse an existing one)
 2. Navigate to `https://teams.splits.org/custom-txn/?account=<subaccount_address>`
 3. Contract address = the subaccount itself (it's calling enableModule on its own contract)
 4. Select `enableModule` from the function dropdown, paste the Executor EOA address
-5. Review → Submit → Passkey auth (one-time)
+5. Review → Submit → Passkey auth (one-time; the agent handles this via OS-level automation)
 6. Fund the Executor EOA with a small amount of ETH on the target chain (for gas)
 7. Done — the Executor can now call `executeFromModule` for any transaction
 
