@@ -2,6 +2,7 @@
 
 ## Agent Autonomy
 - [Agent Financial Autonomy](notes/agent-financial-autonomy.md)
+- [Agent Transaction Architecture](notes/agent-transaction-architecture.md)
 - [Passkey Authentication for Agents](notes/passkey-auth-agents.md)
 - [Session Keys](notes/session-keys.md)
 
@@ -11,6 +12,10 @@
 
 ## Infrastructure
 - [Smart Account Signing](notes/smart-account-signing.md)
+
+## Other
+- [Herd MCP](notes/herd-mcp.md)
+- [Splits Module System](notes/splits-module-system.md)
 
 ## Guides
 - [Splits Teams — Agent Setup Guide](guides/splits-teams-agent-setup.md)

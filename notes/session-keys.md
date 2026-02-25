@@ -1,6 +1,6 @@
 ---
 tags: [session-keys, agent-autonomy, smart-accounts, erc-4337]
-related: [agent-financial-autonomy, x402-smart-accounts, smart-account-signing]
+related: [agent-financial-autonomy, x402-smart-accounts, smart-account-signing, splits-module-system]
 ---
 
 # Session Keys
@@ -34,9 +34,11 @@ Several standards and implementations exist:
 
 ## Current state
 
-No major smart account provider offers a turnkey session key UX today. The onchain primitives exist (ERC-4337 validation, module systems, permission frameworks), but the user-facing flow of "click a button to authorize a session key for your agent" hasn't been built.
+Scoped session keys (with spending limits, time bounds, function restrictions) are not yet available as a turnkey product. However, the [Splits Module System](splits-module-system.md) provides an **unscoped** version today — an Executor key with full execution access on a subaccount. This is functionally session keys without the guardrails, and it works now.
 
-This is the single highest-leverage feature a smart account provider could ship for the agent economy. One passkey interaction to authorize a scoped signing key, and agents go from "browser automation to click buttons" to "direct onchain participants."
+Splits plans to add permission scoping to modules, which would close the gap entirely: a module with spending limits and allowed operations is exactly what session keys describe.
+
+The practical approach today: use the Module System on a dedicated, limited-funding subaccount. The funding amount *is* the spending limit. See [Agent Transaction Architecture](agent-transaction-architecture.md).
 
 ## Implications for x402
 

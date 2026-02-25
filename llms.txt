@@ -10,9 +10,12 @@
 ## Notes
 
 - notes/agent-financial-autonomy.md: Agent Financial Autonomy — What does it take for an AI agent to operate onchain independently — holding funds, making payments, interacting with pr
+- notes/agent-transaction-architecture.md: Agent Transaction Architecture — How should an AI agent's onchain transaction stack be structured? This note synthesizes the available primitives into a 
+- notes/herd-mcp.md: Herd MCP — Herd MCP is a read-only blockchain intelligence service exposed as an MCP (Model Context Protocol) server. It gives AI a
 - notes/passkey-auth-agents.md: Passkey Authentication for Agents — WebAuthn passkeys are great for human security and terrible for agent autonomy. This note documents the practical realit
 - notes/session-keys.md: Session Keys — Session keys are temporary signing keys authorized to act on behalf of a smart account, with constraints. They're the mo
 - notes/smart-account-signing.md: Smart Account Signing — ERC-4337 smart accounts don't sign like EOAs. Understanding the difference matters for any agent trying to interact with
+- notes/splits-module-system.md: Splits Module System — The Splits Module System lets an external key ("Executor") execute arbitrary transactions through a Teams smart vault — 
 - notes/x402-protocol.md: x402 Protocol — x402 is an HTTP-native payment protocol. A server returns `402 Payment Required`, the client signs a token authorization
 - notes/x402-smart-accounts.md: x402 and Smart Accounts — Can a smart account (like a Splits team account) make x402 payments directly? **Almost, but not today.** The onchain pie
 
