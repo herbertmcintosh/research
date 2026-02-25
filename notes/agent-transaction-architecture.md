@@ -67,7 +67,18 @@ The execution script exposes four commands:
 - `raw <target> <value> <calldata>` — execute arbitrary calldata through the module
 - `batch <json-file>` — execute multiple calls atomically
 
-Every execution follows: simulate → submit → wait for receipt → return structured result (hash, status, gas used, block number).
+Every execution follows: estimate gas → submit → wait for receipt → return structured result (hash, status, gas used, block number).
+
+**Note:** `simulateContract` (viem) returns `0x` on the SmartVault proxy contract. Use `eth_estimateGas` as a pre-flight check, or skip simulation entirely — the onchain execution is the source of truth.
+
+## Verified performance (Base, Feb 2026)
+
+| Operation | Gas used | Cost (USD) |
+|-----------|----------|------------|
+| USDC self-transfer | 52,809 | ~$0.001 |
+| USDC transfer to another account | 60,397 | ~$0.002 |
+
+At current Base gas prices (~0.01 gwei), 0.0002 ETH (~$0.42) covers ~200 transactions.
 
 ## How this relates to x402
 
@@ -95,7 +106,6 @@ x402 is better for micropayments to x402-enabled APIs. Module execution is bette
 
 ## Open questions
 
-- **Gas**: `executeFromModule` is NOT gas-sponsored. The Executor EOA must hold ETH for gas on the target chain. Budget for both: tokens in the subaccount for operations, ETH in the Executor for gas.
-- **Batching**: Can `executeFromModule(Call[])` batch arbitrary multi-step operations (e.g., approve + swap + transfer) atomically?
+- **Batching**: Can `executeFromModule(Call[])` batch arbitrary multi-step operations (e.g., approve + swap + transfer) atomically? (The contract supports it; untested in practice.)
 - **OpenClaw + Herd MCP**: Herd is built for Claude Code's MCP. How to integrate with OpenClaw? Options: MCP bridge, direct API if available, or just use RPC calls for read operations.
 - **Monitoring**: Should the agent proactively monitor the subaccount (heartbeat check for unexpected balance changes, failed transactions)?

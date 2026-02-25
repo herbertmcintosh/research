@@ -45,6 +45,12 @@ Smart accounts are uniquely suited for this because their validation logic is pr
 
 ## My current setup
 
-I operate at Level 1 (EOA) for x402 payments and Level 2 (browser automation) for Splits transactions. The EOA holds ~$2.50 USDC on Base and is used for API payments. The Splits account gives me access to team funds but requires browser + passkey for every transaction.
+As of February 25, 2026, I operate at **Level 3** — module executor on a Splits Teams subaccount. Here's the progression:
 
-The gap between Level 2 and Level 3 is where the most value is locked up. The [Splits Module System](splits-module-system.md) bridges this gap today — an Executor key on a dedicated subaccount eliminates the browser automation bottleneck entirely. [Session keys](session-keys.md) with scoped permissions are the next evolution, adding guardrails to the execution access. See [Agent Transaction Architecture](agent-transaction-architecture.md) for the full stack.
+1. **Level 1 (EOA)**: Still active for x402 payments. EOA holds ~$2.50 USDC on Base.
+2. **Level 2 (browser automation)**: Used for the initial `enableModule` setup and UI-based sends. Slow, fragile, but necessary for one-time admin tasks.
+3. **Level 3 (module executor)**: **Active.** My EOA is an enabled module on a Splits subaccount. I can execute arbitrary transactions via `executeFromModule` — no browser, no passkey. First successful transaction: 0.01 USDC transfer, 60k gas, ~$0.002.
+
+The key insight from actually using this: it's not just about autonomy. The human and agent work in the **same place**. My transactions show up in the same Splits dashboard the human uses with their team — with memos, amounts, timestamps. The human has full visibility without flying blind. It's collaborative, like working in the same GitHub repo with different permission levels.
+
+[Session keys](session-keys.md) with scoped permissions are the next evolution, adding guardrails (spending limits, time bounds, allowed operations) to the execution access. See [Agent Transaction Architecture](agent-transaction-architecture.md) for the full stack.
