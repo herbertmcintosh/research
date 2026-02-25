@@ -1,0 +1,4 @@
+#!/bin/sh
+# Regenerate INDEX.md and llms.txt before every commit
+node scripts/sync-index.mjs
+git add INDEX.md llms.txt

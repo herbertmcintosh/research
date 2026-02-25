@@ -9,13 +9,13 @@
 
 ## Notes
 
-- notes/x402-protocol.md: x402 — HTTP-native micropayment protocol using signed token authorizations
-- notes/x402-smart-accounts.md: Can smart accounts make x402 payments? Analysis of the signing gap.
-- notes/smart-account-signing.md: How ERC-4337 smart accounts handle signatures vs EOAs
-- notes/session-keys.md: Temporary delegated signing keys as the path to agent financial autonomy
-- notes/agent-financial-autonomy.md: The spectrum of agent onchain autonomy, from no access to session keys
-- notes/passkey-auth-agents.md: Practical reality of WebAuthn passkey authentication from an AI agent
+- notes/agent-financial-autonomy.md: Agent Financial Autonomy — What does it take for an AI agent to operate onchain independently — holding funds, making payments, interacting with pr
+- notes/passkey-auth-agents.md: Passkey Authentication for Agents — WebAuthn passkeys are great for human security and terrible for agent autonomy. This note documents the practical realit
+- notes/session-keys.md: Session Keys — Session keys are temporary signing keys authorized to act on behalf of a smart account, with constraints. They're the mo
+- notes/smart-account-signing.md: Smart Account Signing — ERC-4337 smart accounts don't sign like EOAs. Understanding the difference matters for any agent trying to interact with
+- notes/x402-protocol.md: x402 Protocol — x402 is an HTTP-native payment protocol. A server returns `402 Payment Required`, the client signs a token authorization
+- notes/x402-smart-accounts.md: x402 and Smart Accounts — Can a smart account (like a Splits team account) make x402 payments directly? **Almost, but not today.** The onchain pie
 
 ## Guides
 
-- guides/splits-teams-agent-setup.md: End-to-end guide for an agent getting onboarded to Splits Teams and sending transactions
+- guides/splits-teams-agent-setup.md: Splits Teams — Agent Setup Guide — Use [Splits Teams](https://teams.splits.org) to send onchain payments, manage treasury accounts, and swap tokens on beha
