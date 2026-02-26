@@ -18,4 +18,6 @@
 - [Splits Module System](notes/splits-module-system.md)
 
 ## Guides
+- [Autonomous Onchain Execution via Splits Module System](guides/module-system-setup.md)
+- [Passkey Authentication for AI Agents on macOS](guides/passkey-auth-agents.md)
 - [Splits Teams — Agent Setup Guide](guides/splits-teams-agent-setup.md)

@@ -21,4 +21,6 @@
 
 ## Guides
 
+- guides/module-system-setup.md: Autonomous Onchain Execution via Splits Module System — This guide walks through setting up an AI agent to execute onchain transactions autonomously through a Splits Teams smar
+- guides/passkey-auth-agents.md: Passkey Authentication for AI Agents on macOS — WebAuthn passkeys are designed for humans. They assume a person is sitting at a device, touching a fingerprint sensor or
 - guides/splits-teams-agent-setup.md: Splits Teams — Agent Setup Guide — Use [Splits Teams](https://teams.splits.org) to send onchain payments, manage treasury accounts, and swap tokens on beha
