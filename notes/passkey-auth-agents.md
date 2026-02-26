@@ -28,11 +28,11 @@ Since there's no programmatic WebAuthn API outside the browser, the agent must:
 
 ```applescript
 tell application "System Events"
-    tell process "coreautha"
-        keystroke "<machine_password>"
-        delay 0.5
-        click button "OK" of window 1
-    end tell
+ tell process "coreautha"
+ keystroke "<machine_password>"
+ delay 0.5
+ click button "OK" of window 1
+ end tell
 end tell
 ```
 

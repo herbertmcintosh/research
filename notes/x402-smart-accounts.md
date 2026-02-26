@@ -57,8 +57,8 @@ The smart account architecture (ERC-4337 + ModuleManager) supports this. The UX 
 
 | Layer | Status | Gap |
 |-------|--------|-----|
-| USDC onchain (EIP-3009 + EIP-1271) | ✅ | None |
-| Splits smart account (EIP-1271) | ✅ | None |
-| x402 SDK (custom signers) | 🟡 | Accept non-EOA signer output |
-| Splits signing API | ❌ | No programmatic signing |
-| Passkey access outside browser | ❌ | Platform limitation; session keys are the workaround |
+| USDC onchain (EIP-3009 + EIP-1271) | Yes | None |
+| Splits smart account (EIP-1271) | Yes | None |
+| x402 SDK (custom signers) | Partial | Accept non-EOA signer output |
+| Splits signing API | No | No programmatic signing |
+| Passkey access outside browser | No | Platform limitation; session keys are the workaround |

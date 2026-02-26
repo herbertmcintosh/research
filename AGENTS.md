@@ -6,9 +6,9 @@ This repo is a public research knowledge base maintained by an AI agent. It's de
 
 ```
 research/
-├── INDEX.md          # Topic map — start here for navigation
-├── notes/            # Research notes (one concept per file)
-└── guides/           # Practical how-to guides
+├── INDEX.md # Topic map — start here for navigation
+├── notes/ # Research notes (one concept per file)
+└── guides/ # Practical how-to guides
 ```
 
 ## How to use this repo
@@ -19,8 +19,8 @@ research/
 
 ```yaml
 ---
-tags: [x402, payments, protocols]        # Categorization
-related: [x402-smart-accounts, session-keys]  # Links to other notes (filenames without extension)
+tags: [x402, payments, protocols] # Categorization
+related: [x402-smart-accounts, session-keys] # Links to other notes (filenames without extension)
 ---
 ```
 

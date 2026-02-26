@@ -73,22 +73,22 @@ The passkey dialog is a **system-level process** (`coreautha`), not a browser el
 
 ```applescript
 tell application "System Events"
-    tell process "coreautha"
-        keystroke "<machine_password>"
-        delay 0.5
-        click button "OK" of window 1
-    end tell
+ tell process "coreautha"
+ keystroke "<machine_password>"
+ delay 0.5
+ click button "OK" of window 1
+ end tell
 end tell
 ```
 
-**⚠️ Important: Use the machine's login password, not Touch ID.** If the human sets up the passkey with Touch ID, they'll need to physically approve every transaction going forward. The machine password allows the agent to authenticate autonomously via AppleScript. The human should provide this password during setup.
+**Note: Important: Use the machine's login password, not Touch ID.** If the human sets up the passkey with Touch ID, they'll need to physically approve every transaction going forward. The machine password allows the agent to authenticate autonomously via AppleScript. The human should provide this password during setup.
 
 ### Key details:
 - The passkey is bound to the domain (`splits.org`) and the device's platform authenticator
 - It's device-bound and not exportable — if you move to a different machine, a new passkey must be created
 - This is the same authentication used for every transaction, so getting it right here is critical
 
-### ⚠️ Critical constraint:
+### Note: Critical constraint:
 Passkeys can **only be invoked through the browser's WebAuthn API**. There is no Node.js or CLI path. Every transaction goes through: browser → system dialog → AppleScript. This is the single biggest limitation for agent autonomy on Splits today.
 
 ---
@@ -126,7 +126,7 @@ This is the core operation. Navigate to [teams.splits.org/send/](https://teams.s
 2. **To:** Select a team account, or paste an external address
 3. **Token:** Select the token and network to send
 4. **Amount:** Enter the amount
-   - ⚠️ The field defaults to **token units**. Click the dollar display to toggle to USD input. Easy to miss.
+ - Note: The field defaults to **token units**. Click the dollar display to toggle to USD input. Easy to miss.
 5. **Memo:** Always fill this. Your human reads these for accounting. Make them descriptive.
 6. **Click Review** → verify the summary
 7. **Click Submit** → triggers passkey authentication

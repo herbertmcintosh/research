@@ -22,7 +22,7 @@ A smart account is a contract. It can't "hold" a private key. Instead, it implem
 
 ```solidity
 function isValidSignature(bytes32 hash, bytes memory signature) 
-    external view returns (bytes4 magicValue);
+ external view returns (bytes4 magicValue);
 ```
 
 The contract defines its own validation logic. It might:

@@ -11,31 +11,31 @@ How should an AI agent's onchain transaction stack be structured? This note synt
 
 ```
 ┌──────────────────────────────────────────┐
-│            AI Agent (OpenClaw)            │
-│                                          │
-│  ┌─────────────┐   ┌─────────────────┐  │
-│  │  Read Layer  │   │  Write Layer    │  │
-│  │  (Herd MCP)  │──>│  (Executor key) │  │
-│  │             │   │                 │  │
-│  │ - balances  │   │ - build calls   │  │
-│  │ - ABIs      │   │ - sign tx       │  │
-│  │ - history   │   │ - submit tx     │  │
-│  │ - contracts │   │ - verify result │  │
-│  └─────────────┘   └─────────────────┘  │
-│                           │              │
+│ AI Agent (OpenClaw) │
+│ │
+│ ┌─────────────┐ ┌─────────────────┐ │
+│ │ Read Layer │ │ Write Layer │ │
+│ │ (Herd MCP) │──>│ (Executor key) │ │
+│ │ │ │ │ │
+│ │ - balances │ │ - build calls │ │
+│ │ - ABIs │ │ - sign tx │ │
+│ │ - history │ │ - submit tx │ │
+│ │ - contracts │ │ - verify result │ │
+│ └─────────────┘ └─────────────────┘ │
+│ │ │
 └───────────────────────────│──────────────┘
-                            │
-                            ▼
-             ┌──────────────────────────┐
-             │  Teams Smart Vault       │
-             │  (dedicated subaccount)  │
-             │                          │
-             │  executeFromModule(calls)│
-             │          │               │
-             │          ▼               │
-             │  Target contracts        │
-             │  (as msg.sender)         │
-             └──────────────────────────┘
+ │
+ ▼
+ ┌──────────────────────────┐
+ │ Teams Smart Vault │
+ │ (dedicated subaccount) │
+ │ │
+ │ executeFromModule(calls)│
+ │ │ │
+ │ ▼ │
+ │ Target contracts │
+ │ (as msg.sender) │
+ └──────────────────────────┘
 ```
 
 ## The observe-decide-execute-verify loop
