@@ -232,8 +232,8 @@ switch (command) {
         console.log(`Sub-account:    ${SUBACCOUNT_ADDRESS}`);
         console.log(`\n!! Contract not deployed yet.`);
         console.log(`The sub-account contract is not deployed on Base.`);
-        console.log(`It gets deployed automatically on the first transaction to/from the account.`);
-        console.log(`Send some ETH to the sub-account on Base to deploy it.`);
+        console.log(`Enable the executor module via the custom transaction page to deploy it:`)
+        console.log(`   https://teams.splits.org/custom-txn/?account=${SUBACCOUNT_ADDRESS}`);
         process.exit(1);
       }
       throw err;
@@ -481,21 +481,20 @@ cd $ARGUMENTS && node execute-module.mjs check
 
 At this point `check` will likely show "Contract not deployed yet" -- that's expected, we'll fix it in the next step.
 
-### Step 2: Fund sub-account and executor
+### Step 2: Fund the executor
 
 Tell the user:
 
-Two transfers needed (you can do them at the same time):
+Send ~0.0002 ETH on Base to the executor (`<EXECUTOR_ADDRESS>`). This gives it gas for ~200 transactions.
 
-1. **Fund the sub-account:** Send ~0.0003 ETH on Base to the sub-account (`<SUBACCOUNT_ADDRESS>`). This deploys the contract.
-2. **Fund the executor:** Send ~0.0002 ETH on Base to the executor (`<EXECUTOR_ADDRESS>`). This gives it gas for ~200 transactions.
+The sub-account does not need to be funded separately -- it gets deployed automatically when you enable the module in the next step.
 
 Use AskUserQuestion:
 
-**Question:** "Let me know when both transfers are done."
+**Question:** "Let me know when the executor is funded."
 
 **Options:**
-1. **Done, both are funded**
+1. **Done, executor is funded**
 2. **I need help**
 
 After the user confirms, run `check` to verify:
@@ -504,7 +503,6 @@ After the user confirms, run `check` to verify:
 cd $ARGUMENTS && node execute-module.mjs check
 ```
 
-- If "returned no data" error: the sub-account contract isn't deployed yet. The user needs to send ETH to the sub-account on Base first.
 - If executor ETH balance is 0: remind the user to fund the executor.
 - If RPC errors: try switching `RPC_URL` to `https://1rpc.io/base`.
 
@@ -512,7 +510,7 @@ cd $ARGUMENTS && node execute-module.mjs check
 
 Tell the user:
 
-Last step -- enable the executor as a module on the sub-account:
+Last step -- enable the executor as a module on the sub-account. This also deploys the sub-account contract if it hasn't been deployed yet.
 
 1. Go to: https://teams.splits.org/custom-txn/?account=<SUBACCOUNT_ADDRESS>
 2. Call `enableModule(<EXECUTOR_ADDRESS>)`
