@@ -252,6 +252,8 @@ switch (command) {
     if (balance === 0n) {
       console.log('\n!! Executor has no ETH for gas. Send ~0.0002 ETH on Base to:');
       console.log(`   ${executorAccount.address}`);
+    } else if (balance > 0n && balance < parseEther('0.0001')) {
+      console.log(`\n!! Executor balance is low (${formatEther(balance)} ETH). Recommend at least 0.0002 ETH for ~200 transactions.`);
     }
     break;
   }
@@ -382,6 +384,30 @@ switch (command) {
     break;
   }
 
+  case 'drain': {
+    // drain <to> — send all remaining ETH from executor (minus gas reserve)
+    const [to] = args;
+    if (!to) {
+      console.error('Usage: node execute-module.mjs drain <to>');
+      console.error('  Sends all remaining ETH from the executor wallet to <to>.');
+      process.exit(1);
+    }
+    const balance = await publicClient.getBalance({ address: executorAccount.address });
+    const gasReserve = 21000n * 100000000n; // ~0.0000021 ETH
+    if (balance <= gasReserve) {
+      console.error(`Executor balance (${formatEther(balance)} ETH) is too low to drain.`);
+      process.exit(1);
+    }
+    const drainValue = balance - gasReserve;
+    console.log(`Draining ${formatEther(drainValue)} ETH from executor to ${to} on Base...`);
+    const hash = await walletClient.sendTransaction({ to, value: drainValue, gas: 21000n });
+    console.log(`Transaction sent: ${hash}`);
+    console.log(`Explorer: https://basescan.org/tx/${hash}`);
+    const receipt = await publicClient.waitForTransactionReceipt({ hash });
+    console.log(`Status: ${receipt.status === 'success' ? 'confirmed' : 'FAILED'}`);
+    break;
+  }
+
   default:
     console.log('Splits Teams Module Executor');
     console.log('Network: Base');
@@ -391,6 +417,7 @@ switch (command) {
     console.log('  transfer <to> <token> <amount>     — Send tokens from sub-account (via module)');
     console.log('  approve <token> <spender> [amount]  — Approve token spending from sub-account (via module)');
     console.log('  send-eth <to> <amount>             — Send ETH directly from executor wallet');
+    console.log('  drain <to>                         — Send all remaining ETH from executor wallet');
     console.log('  raw <target> <data> [value]        — Execute arbitrary calldata (via module)');
     console.log('  batch <calls.json>                 — Execute multiple calls atomically (via module)');
     break;
@@ -451,21 +478,22 @@ Save this address -- you'll need it in the next steps.
 
 Use AskUserQuestion:
 
-**Question:** "Create a sub-account for this project, then paste the address here."
+**Question:** "Paste your sub-account address, or ask for help creating one."
 
 **Options:**
-1. **I've created it, here's the address** -- (user types the address)
-2. **I already have a sub-account to use** -- (user types the address)
-3. **I need help**
+1. **Paste address below** -- "Paste your sub-account address (0x...) in the text input"
+2. **I need help creating one** -- "Get step-by-step instructions for creating a sub-account"
 
-If the user picks "I need help", explain:
+If the user picks option 1 and pastes an address, proceed directly.
+
+If the user picks "I need help creating one", explain:
 
 1. Go to https://teams.splits.org/new/
 2. Name it `$ARGUMENTS` to match this project
 3. Make sure Base is enabled as a network (it may already be)
 4. Copy the sub-account address and paste it here
 
-If the user didn't include an address in their response, ask them directly: "What's the sub-account address?"
+Then re-ask for the address using AskUserQuestion with the same two options.
 
 Once you have the address, **append** it to `.env` (never overwrite):
 
@@ -473,13 +501,11 @@ Once you have the address, **append** it to `.env` (never overwrite):
 cd $ARGUMENTS && echo "SUBACCOUNT_ADDRESS=<address>" >> .env
 ```
 
-Then run `check` to confirm the address was written correctly:
+Verify the address was saved:
 
 ```bash
-cd $ARGUMENTS && node execute-module.mjs check
+cd $ARGUMENTS && grep SUBACCOUNT .env
 ```
-
-At this point `check` will likely show "Contract not deployed yet" -- that's expected, we'll fix it in the next step.
 
 ### Step 2: Fund the executor
 
@@ -512,9 +538,12 @@ Tell the user:
 
 Last step -- enable the executor as a module on the sub-account. This also deploys the sub-account contract if it hasn't been deployed yet.
 
-1. Go to: https://teams.splits.org/custom-txn/?account=<SUBACCOUNT_ADDRESS>
-2. Call `enableModule(<EXECUTOR_ADDRESS>)`
-3. This requires a one-time passkey authentication
+1. Go to: `https://teams.splits.org/custom-txn/?account=<SUBACCOUNT_ADDRESS>`
+2. Paste `<SUBACCOUNT_ADDRESS>` into the **"Contract address"** input
+3. Select **Base** as the network
+4. Select **`enableModule`** in the "Function to call" dropdown
+5. Paste `<EXECUTOR_ADDRESS>` into the **address** input
+6. Submit (requires passkey authentication)
 
 Use AskUserQuestion:
 
@@ -587,6 +616,7 @@ Setup complete!
     node execute-module.mjs transfer <to> <token> <amount>     -- Send tokens from sub-account
     node execute-module.mjs approve <token> <spender> [amount] -- Approve token spending
     node execute-module.mjs send-eth <to> <amount>             -- Send ETH from executor
+    node execute-module.mjs drain <to>                         -- Send all remaining ETH from executor
     node execute-module.mjs raw <target> <calldata> [value]    -- Arbitrary calldata
     node execute-module.mjs batch <calls.json>                 -- Batch calls
 
@@ -637,6 +667,13 @@ node execute-module.mjs approve 0xTokenAddress 0xSpenderAddress
 ```bash
 # Send ETH directly from the executor (not through the module)
 node execute-module.mjs send-eth 0xRecipient 0.001
+```
+
+#### Drain executor wallet (direct)
+
+```bash
+# Send all remaining ETH from executor to a destination (keeps a small gas reserve)
+node execute-module.mjs drain 0xRecipient
 ```
 
 #### Send ETH from sub-account (via module)
